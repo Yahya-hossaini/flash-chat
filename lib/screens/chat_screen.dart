@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flash_chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _fireStore = FirebaseFirestore.instance;
+  TextEditingController _messageEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,13 +43,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: _messageEditingController,
                       onChanged: (value) {},
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      //Implement send functionality
+                      _fireStore.collection('messages').add({
+                        'date' : DateTime.now().millisecondsSinceEpoch,
+                        'text' : _messageEditingController.text,
+                        'sender' : AuthService().getCurrentUser!.email,
+                      });
                     },
                     child: const Icon(Icons.send,
                         size: 30, color: kSendButtonColor),
