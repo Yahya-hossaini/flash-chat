@@ -16,13 +16,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final _fireStore = FirebaseFirestore.instance;
   TextEditingController _messageEditingController = TextEditingController();
 
-  // void getMessages() async {
-  //   var messages = await _fireStore.collection('messages').get();
-  //   for(var message in messages.docs){
-  //     print(message.data());
-  //   }
-  // }
-
   void messageStream() {
     _fireStore.collection('messages').snapshots().listen((event) {
       for (var message in event.docs) {
