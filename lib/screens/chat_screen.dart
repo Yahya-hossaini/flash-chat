@@ -42,7 +42,9 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () {
-                Navigator.pop(context);
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
                 AuthService().signOut();
               }),
         ],
@@ -99,7 +101,7 @@ class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _fireStore.collection('messages').snapshots(),
+      stream: _fireStore.collection('messages').orderBy('date', descending: true).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Expanded(
@@ -116,11 +118,16 @@ class MessageStream extends StatelessWidget {
           for (var message in messages) {
             var messageText = message.get('text');
             var sender = message.get('sender');
-            Widget messageBubble = MessageBubble(message: messageText, sender: sender);
+            Widget messageBubble = MessageBubble(
+              message: messageText,
+              sender: sender,
+              isMe: AuthService().getCurrentUser!.email == sender,
+            );
             messageBubbles.add(messageBubble);
           }
           return Expanded(
             child: ListView(
+              reverse: true,
               children: messageBubbles,
             ),
           );
@@ -133,4 +140,3 @@ class MessageStream extends StatelessWidget {
     );
   }
 }
-

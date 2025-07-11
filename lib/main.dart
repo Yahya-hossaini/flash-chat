@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '/screens/welcome_screen.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -23,22 +23,23 @@ class FlashChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: AuthService().authStateChanges,
-      builder: (context, snapshot) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: kBackgroundColor,
-          ),
-          routes: {
-            WelcomeScreen.id : (context) => WelcomeScreen(),
-            LoginScreen.id : (context) => LoginScreen(),
-            RegistrationScreen.id : (context) => RegistrationScreen(),
-            ChatScreen.id : (context) => ChatScreen(),
-          },
-          initialRoute: AuthService().getCurrentUser != null ? ChatScreen.id : WelcomeScreen.id,
-        );
-      }
-    );
+        stream: AuthService().authStateChanges,
+        builder: (context, snapshot) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: kBackgroundColor,
+            ),
+            routes: {
+              WelcomeScreen.id: (context) => WelcomeScreen(),
+              LoginScreen.id: (context) => LoginScreen(),
+              RegistrationScreen.id: (context) => RegistrationScreen(),
+              ChatScreen.id: (context) => ChatScreen(),
+            },
+            home: AuthService().getCurrentUser != null
+                ? ChatScreen()
+                : WelcomeScreen(),
+          );
+        });
   }
 }
