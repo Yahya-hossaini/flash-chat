@@ -1,3 +1,4 @@
+import 'package:flash_chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -20,8 +21,9 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: () {
-                // Implement logout functionality
+              onPressed: (){
+                Navigator.pop(context);
+                AuthService().signOut();
               }),
         ],
         title: const Text('⚡ ️Chat'),
